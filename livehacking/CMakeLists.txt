@@ -5,4 +5,5 @@ ADD_EXECUTABLE(union union.cpp)
 ADD_EXECUTABLE(lambda-transform lambda-transform.cpp)
 ADD_EXECUTABLE(lambda lambda.cpp)
 ADD_EXECUTABLE(copy-segfault copy-segfault.cpp)
-
+ADD_EXECUTABLE(exitstatus exitstatus.c)
+ADD_EXECUTABLE(point point.cpp)
