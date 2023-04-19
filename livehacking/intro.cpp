@@ -1,75 +1,55 @@
-#include <map>
-#include <string>
-#include <iostream>
-#include <chrono>
-#include <thread>
-#include <functional>
-#include <memory>
-#include <variant>
+#include "todolist.h"
+#include <signal.h>
 #include <unistd.h>
 
 using namespace std::chrono_literals;
 
-class TodoList final
+
+TodoList* argh_the_todo_list_for_quit = nullptr;
+
+void quit_handler(int signal)
 {
-public:
-    TodoList() = default;
-    TodoList(const TodoList&) = delete;
-    TodoList& operator=(const TodoList&) = delete;
+    const char msg[] = "now slowly terminating ...";
+    write(STDOUT_FILENO, msg, sizeof(msg));
+    if (argh_the_todo_list_for_quit)
+        argh_the_todo_list_for_quit->quit();
+}
 
-    void add_item(const std::string& name, std::function<void()> func)
-    {
-        _tdl[name] = func;
+void yet_another_todo_item(std::atomic<bool>* quit)
+{
+    for (int i=0; i<1000; i++) {
+        std::cout << "hallo" << std::endl;
+        std::this_thread::sleep_for(1s);
+        if (*quit)
+            break;
     }
-
-    void start()
-    {
-        for (auto& [name, item]: _tdl) {
-            std::cout << "Start NAME: " << name << std::endl;
-            auto func = std::get<0>(item);
-            item = std::make_shared<std::thread>(func);
-        }
-    }
-
-    void wait()
-    {
-        for (auto& [name, item]: _tdl)
-            std::get<1>(item)->join();
-    }
-
-private:
-    using todo_item = std::variant<std::function<void()>, std::shared_ptr<std::thread>>;
-    using todo_list = std::map<std::string, todo_item>;
-
-    todo_list _tdl;
-};
-
-
-
+}
 int main()
 {
-    bool quit = false;
-    
     TodoList tdl;
+    argh_the_todo_list_for_quit = &tdl;
+
+    signal(SIGINT, quit_handler);
+
     tdl.add_item("up 1 to 10",
-                 [&quit](){
+                 [](std::atomic<bool>* quit){
                      for (int i=1; i<=10; i++) {
                          std::cout << "UP: " << i << std::endl;
                          std::this_thread::sleep_for(1s);
-                         if (quit)
+                         if (*quit)
                              break;
                      }
                  });
     tdl.add_item("down 1000 to 980",
-                 [&quit](){
+                 [](std::atomic<bool>* quit){
                      for (int i=1000; i>=980; i--) {
                          std::cout << "DOWN: " << i << std::endl;
                          std::this_thread::sleep_for(0.5s);
-                         if (quit)
+                         if (*quit)
                              break;
                      }
                  });
-
+    tdl.add_item("yet another", yet_another_todo_item);
 
     tdl.start();
 

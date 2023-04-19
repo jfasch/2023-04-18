@@ -1,8 +1,9 @@
 ADD_LIBRARY(
   group-joerg
 
-  dummy.h
-  dummy.cpp
+  sensor.h
+  sensor-registry.h
+  sensor-registry.cpp
 )
 
 TARGET_INCLUDE_DIRECTORIES(group-joerg PUBLIC .)
