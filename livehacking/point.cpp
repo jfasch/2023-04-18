@@ -46,7 +46,7 @@ private:
 
 int main()
 {
-    /*const jjj!!!*/point p(1,2);
+    point p(1,2);
     cout << '(' << p.x() << ',' << p.y() << ')' << endl;
 
     point p1;
