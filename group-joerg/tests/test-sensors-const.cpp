@@ -14,5 +14,6 @@ TEST(sensors_const, sensor_registry)
 {
     SensorRegistry reg;
     reg.add_sensor("foo", new Sensor(42.666));
-    reg.get_temperature("foo");
+    const SensorRegistry* myconstreg = &reg;
+    myconstreg->get_temperature("foo");
 }
