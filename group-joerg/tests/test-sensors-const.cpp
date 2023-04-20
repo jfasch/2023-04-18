@@ -13,7 +13,7 @@ TEST(sensors_const, sensor)
 TEST(sensors_const, sensor_registry)
 {
     SensorRegistry reg;
-    reg.add_sensor("foo", new Sensor(42.666));
+    reg.add_sensor("foo", std::make_shared<Sensor>(42.666));
     const SensorRegistry* myconstreg = &reg;
     myconstreg->get_temperature("foo");
 }

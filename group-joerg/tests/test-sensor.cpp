@@ -16,8 +16,8 @@ TEST(sensor_suite, registry)
 {
     SensorRegistry registry;
 
-    Sensor* s1 = new Sensor(42.666);
-    Sensor* s2 = new Sensor(36.5);
+    auto s1 = std::make_shared<Sensor>(42.666);
+    auto s2 = std::make_shared<Sensor>(36.5);
 
     registry.add_sensor("foo", s1);
     registry.add_sensor("bar", s2);

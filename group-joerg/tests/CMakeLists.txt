@@ -3,6 +3,7 @@ ADD_EXECUTABLE(
 
   test-sensor.cpp
   test-sensors-const.cpp
+  test-sensor-registry-managed.cpp
 )
 
 TARGET_LINK_LIBRARIES(
