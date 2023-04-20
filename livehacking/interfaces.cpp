@@ -6,33 +6,20 @@ using namespace std;
 class Sensor
 {
 public:
-    Sensor(const std::string& name)
-    : name(name) {}
     virtual ~Sensor() {}
-    virtual double get_temperature()
-    {
-        assert(false);
-        return 666;
-    }
-
-    const std::string name;
+    virtual double get_temperature() = 0;
 };
 
 class I2CSensor : public Sensor
 {
 public:
-    I2CSensor(const std::string& name)
-    : Sensor(name)
-    {
-        i2cmem = new char[1024];
-    }
     ~I2CSensor()
     {
         cout << "~I2CSensor()" << endl;
         delete[] i2cmem;
     }
 
-    double get_temperature()
+    double get_temperature() override
     {
         return 42;
     }
@@ -44,18 +31,13 @@ private:
 class OneWireSensor : public Sensor
 {
 public:
-    OneWireSensor(const std::string& name)
-    : Sensor(name)
-    {
-        owmem = new char[1024];
-    }
     ~OneWireSensor()
     {
         cout << "~OneWireSensor()" << endl;
         delete[] owmem;
     }
 
-    double get_temperature()
+    double get_temperature() override
     {
         return -273.3;
     }
@@ -67,8 +49,8 @@ private:
 
 int main()
 {
-    Sensor* s1 = new OneWireSensor("mein-ow-sensor");
-    Sensor* s2 = new I2CSensor("mein-i2c-sensor");
+    Sensor* s1 = new OneWireSensor;
+    Sensor* s2 = new I2CSensor;
 
     std::vector<Sensor*> sensors = {s1, s2};
 
